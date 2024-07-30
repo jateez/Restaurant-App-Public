@@ -47,13 +47,17 @@
     </nav>
     <main class="py-12">
       <div class="h-screen w-screen flex justify-center items-center ">
-        <div id="cuisine" class="flex bg-red-200 shadow-lg w-[75%] h-[80%] border divide-x">
-          <div id="image" class="h-full w-[50%]">
-            <img class="object-cover h-full" src="https://picsum.photos/1800" alt="">
+        <div id="cuisine" class="flex shadow-2xl w-3/4 h-4/5 border divide-x rounded-lg overflow-hidden">
+          <div id="image" class="h-full w-1/2">
+            <img class="object-cover h-full w-full" src="https://picsum.photos/1800" alt="">
           </div>
-          <div id="details" class="h-full w-[50%] text-center">
-            <p class="text-3xl font-bold">Name</p>
-            <p class="text-2xl font-semibold">Description</p>
+          <div id="details" class="flex flex-col justify-between h-full w-1/2 text-center p-8">
+            <div>
+              <h2 class="text-3xl font-bold mb-6">Name</h2>
+              <p class="text-xl px-4 py-2 bg-blue-100 rounded-full inline-block mb-12">Category</p>
+              <p class="text-2xl font-semibold mb-6">Description</p>
+            </div>
+            <p class="text-xl font-medium">Rp. 200.000</p>
           </div>
         </div>
       </div>
