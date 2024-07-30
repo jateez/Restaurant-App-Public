@@ -57,21 +57,24 @@
             <input type="text" id="search-navbar"
               class=" flex flex-1 text-sm text-white border border-gray-300 rounded-lg bg-gray-50"
               placeholder="Search...">
-            <button type="submit" class="bg-orange-500 rounded-lg">
-              <svg class="text-white font-bold mx-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="40" height="40" color="#000000"
-                fill="none">
-                <path d="M17.5 17.5L22 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                  stroke-linejoin="round" />
+            <button type="submit" class="hover:bg-orange-500 focus:ring-4 focus:ring-orange-300  rounded-lg">
+              <svg class="text-orange-500 hover:text-white font-bold" xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24" width="40" height="40" color="#000000" fill="none">
+                <path d="M14 14L16.5 16.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
                 <path
-                  d="M20 11C20 6.02944 15.9706 2 11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11Z"
+                  d="M16.4333 18.5252C15.8556 17.9475 15.8556 17.0109 16.4333 16.4333C17.0109 15.8556 17.9475 15.8556 18.5252 16.4333L21.5667 19.4748C22.1444 20.0525 22.1444 20.9891 21.5667 21.5667C20.9891 22.1444 20.0525 22.1444 19.4748 21.5667L16.4333 18.5252Z"
+                  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                <path
+                  d="M16 9C16 5.13401 12.866 2 9 2C5.13401 2 2 5.13401 2 9C2 12.866 5.13401 16 9 16C12.866 16 16 12.866 16 9Z"
                   stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
               </svg>
             </button>
+
           </div>
           <div id="buttons" class="flex items-center gap-x-4">
             <div id="filter-option" class="flex items-center">
               <button id="filter" data-dropdown-toggle="filters" data-dropdown-trigger="click" type="button"
-                class="flex items-center focus:outline-none text-white bg-orange-500 hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 ">
+                class="flex items-center focus:outline-none text-white bg-orange-500 hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5">
                 Filter
                 <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                   viewBox="0 0 10 6">
