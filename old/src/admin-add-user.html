@@ -14,14 +14,14 @@
     rel="stylesheet">
   <script>
   </script>
-  <title>Admin Login</title>
+  <title>Create Account</title>
 </head>
 
 <body>
   <div class="container">
 
-    <main class="bg-gray-100 h-screen w-screen">
-      <div class="h-full w-full flex flex-col justify-center items-center">
+    <main class="bg-gray-100 min-h-screen w-screen">
+      <div class="h-full flex flex-col justify-center items-center py-12">
         <div id="cuisine"
           class="flex shadow-2xl w-1/2 h-5/6 border divide-x rounded-lg overflow-hidden bg-white justify-center">
           <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
@@ -37,7 +37,7 @@
                 <div>
                   <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Username</label>
                   <div class="mt-2">
-                    <input id="username" name="username" type="username" autocomplete="username" required
+                    <input id="username" name="username" type="text" autocomplete="username" required
                       class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                   </div>
                 </div>
@@ -58,6 +58,46 @@
                   </div>
                   <div class="mt-2">
                     <input id="password" name="password" type="password" autocomplete="current-password" required
+                      class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex items-center justify-between">
+                    <label for="role" class="block text-sm font-medium leading-6 text-gray-900">Role</label>
+                    <!-- <div class="text-sm">
+                      <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Forgot password?</a>
+                    </div> -->
+                  </div>
+                  <div class="mt-2">
+                    <input id="role" name="role" type="text" autocomplete="current-role" required
+                      class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex items-center justify-between">
+                    <label for="phoneNumber" class="block text-sm font-medium leading-6 text-gray-900">Phone
+                      Number</label>
+                    <!-- <div class="text-sm">
+                      <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Forgot password?</a>
+                    </div> -->
+                  </div>
+                  <div class="mt-2">
+                    <input id="phoneNumber" name="phoneNumber" type="text" autocomplete="phoneNumber" required
+                      class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex items-center justify-between">
+                    <label for="address" class="block text-sm font-medium leading-6 text-gray-900">Address</label>
+                    <!-- <div class="text-sm">
+                      <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Forgot password?</a>
+                    </div> -->
+                  </div>
+                  <div class="mt-2">
+                    <input id="address" name="address" type="text" autocomplete="address" required
                       class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                   </div>
                 </div>
