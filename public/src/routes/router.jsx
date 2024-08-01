@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../pages/MainLayout";
 import Home from "../pages/Home";
+import CuisineCardDetail from "../components/CuisineCardDetail";
 
 const router = createBrowserRouter([
   {
@@ -13,6 +14,7 @@ const router = createBrowserRouter([
       },
       {
         path: ":id",
+        element: <CuisineCardDetail />,
       },
     ],
   },

@@ -8,13 +8,21 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [cuisines, setCuisines] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [filter, setFilter] = useState("");
+  const [sort, setSort] = useState("");
+  const [pageNumber, setPageNumber] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
 
-  function handleNavigation(e) {
+  async function handleFilter(e) {
     e.preventDefault();
     let params = serializeFormQuery(e.target);
     setSearchParams(params);
+  }
 
-    console.log(searchParams);
+  async function handleSort(e) {
+    e.preventDefault();
+    let params = serializeFormQuery(e.target);
+    setSearchParams(params);
   }
 
   useEffect(() => {
@@ -23,20 +31,20 @@ export default function Home() {
         setIsLoading(true);
         const { data } = await axios({
           method: "GET",
-          url: "/pub/cuisines",
+          url: `/pub/cuisines?pagination=${pageNumber}`,
         });
-        setCuisines(data);
-        console.log(data);
+        setPageNumber(data.pageNumber);
+        setTotalPage(data.totalPage);
+        setCuisines(data.data);
       } catch (error) {
-        console.log(error);
         setError(error);
+        console.log(error);
       } finally {
         setIsLoading(false);
       }
     }
     fetchData();
-    // handleNavigation();
-  }, []);
+  }, [pageNumber]);
 
   if (isLoading) {
     return <p className="text-center font-bold">Loading...</p>;
@@ -62,82 +70,36 @@ export default function Home() {
               </div>
               <div id="buttons" className="flex items-center gap-x-4">
                 <div id="filter-option" className="flex items-center">
-                  <button
-                    id="filter"
-                    data-dropdown-toggle="filters"
-                    data-dropdown-trigger="click"
-                    type="button"
-                    className="flex btn-sm items-center focus:outline-none text-white bg-orange-500 hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5"
-                  >
-                    Filter
-                    <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m1 1 4 4 4-4" />
-                    </svg>
-                  </button>
-                  <div id="filters" className="z-50 hidden divide-y divide-gray-100 rounded-lg shadow w-44">
-                    <ul className="py-2 text-sm bg-gray-50 text-gray-700 rounded-lg" aria-labelledby="filter">
-                      <li>
-                        <a href="" className="block px-4 py-2 hover:bg-gray-200">
-                          Main Course
-                        </a>
-                      </li>
-                      <li>
-                        <a href="" className="block px-4 py-2 hover:bg-gray-200">
-                          Appetizers
-                        </a>
-                      </li>
-                      <li>
-                        <a href="" className="block px-4 py-2 hover:bg-gray-200">
-                          Desserts
-                        </a>
-                      </li>
-                      <li>
-                        <a href="" className="block px-4 py-2 hover:bg-gray-200">
-                          Beverages
-                        </a>
-                      </li>
-                      <li>
-                        <a href="" className="block px-4 py-2 hover:bg-gray-200">
-                          Snacks
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
+                  <form onChange={handleSubmit}>
+                    <select id="filter" name="filter" className="select select-bordered select-sm focus:outline-none text-white bg-orange-500 hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm">
+                      <option disabled selected>
+                        Filter
+                      </option>
+                      <option value="Main Course">Main Course</option>
+                      <option value="Appetizers">Appetizers</option>
+                      <option value="Desserts">Desserts</option>
+                      <option value="Beverages">Beverages</option>
+                      <option value="Snacks">Snacks</option>
+                    </select>
+                  </form>
                 </div>
                 <div id="sort-option">
-                  <button
-                    id="sort"
-                    data-dropdown-toggle="sorts"
-                    data-dropdown-trigger="click"
-                    type="button"
-                    className="flex dropdown-sm items-center focus:outline-none text-white bg-orange-500 hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5"
-                  >
-                    Sort
-                    <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m1 1 4 4 4-4" />
-                    </svg>
-                  </button>
-                  <div id="sorts" className="z-50 hidden divide-y divide-gray-100 rounded-lg shadow w-44">
-                    <ul className="dropdown-content py-2 text-sm bg-gray-50 text-gray-700 rounded-lg" aria-labelledby="sort">
-                      <li>
-                        <a href="" className="block px-4 py-2 hover:bg-gray-100">
-                          Ascending
-                        </a>
-                      </li>
-                      <li>
-                        <a href="" className="block px-4 py-2 hover:bg-gray-100">
-                          Descending
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
+                  <form onChange={handleSubmit}>
+                    <select id="sort" name="sort" className="select select-bordered select-sm focus:outline-none text-white bg-orange-500 hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm">
+                      <option disabled selected>
+                        Sort
+                      </option>
+                      <option value={"ASC"}>ASC</option>
+                      <option value={"ASC"}>DESC</option>
+                    </select>
+                  </form>
                 </div>
               </div>
             </div>
             <div id="cards" className="justify-between flex flex-wrap py-12 gap-12">
               {/* Card */}
-              {cuisines.data.map((cuisine) => {
-                return <CuisineCard key={cuisine.id} name={cuisine.name} description={cuisine.description} id={cuisine.id} />;
+              {cuisines.map((cuisine, index) => {
+                return <CuisineCard key={index + 1} name={cuisine.name} description={cuisine.description} id={cuisine.id} />;
               })}
               {/* End Card */}
             </div>
@@ -157,31 +119,32 @@ export default function Home() {
                     className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-full text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                     type="button"
                   >
-                    <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">1</span>
-                  </button>
-                  <button
-                    className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-full text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                    type="button"
-                  >
-                    <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">2</span>
+                    <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">{pageNumber - 1}</span>
                   </button>
                   <button
                     className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-full bg-gray-900 text-center align-middle font-sans text-xs font-medium uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                     type="button"
                   >
-                    <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">3</span>
+                    <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">{pageNumber}</span>
                   </button>
                   <button
                     className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-full text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                     type="button"
                   >
-                    <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">4</span>
+                    <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">{pageNumber + 1}</span>
+                  </button>
+
+                  <button
+                    className="disabled relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-full text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                    type="button"
+                  >
+                    <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">...</span>
                   </button>
                   <button
                     className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-full text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                     type="button"
                   >
-                    <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">5</span>
+                    <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">{totalPage}</span>
                   </button>
                 </div>
                 <button
