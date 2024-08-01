@@ -2,6 +2,7 @@ import { createBrowserRouter, redirect } from "react-router-dom";
 import MainLayout from "../pages/MainLayout";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
+import AddCuisine from "../pages/AddCuisine";
 
 const router = createBrowserRouter([
   {
@@ -29,7 +30,8 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: ":id",
+        path: "cuisines/add",
+        element: <AddCuisine />,
       },
     ],
   },
