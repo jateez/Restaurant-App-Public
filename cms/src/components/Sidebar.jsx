@@ -1,4 +1,10 @@
+import { Link } from "react-router-dom";
+
 export default function Sidebar() {
+  function handlerProfile(e) {
+    e.preventDefault();
+  }
+
   return (
     <>
       <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 ">
@@ -29,7 +35,7 @@ export default function Sidebar() {
             <div className="flex items-center">
               <div className="flex items-center ms-3">
                 <div>
-                  <button type="button" className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300" aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                  <button type="button" onClick={handlerProfile} className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300" aria-expanded="false" data-dropdown-toggle="dropdown-user">
                     <span className="sr-only">Open user menu</span>
                     <img className="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo" />
                   </button>
