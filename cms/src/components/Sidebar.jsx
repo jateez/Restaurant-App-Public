@@ -81,15 +81,15 @@ export default function Sidebar() {
       <aside id="logo-sidebar" className="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 " aria-label="Sidebar">
         <div className="flex flex-col h-full px-3 pb-4 overflow-y-auto bg-white">
           <ul className="flex flex-col items-between space-y-2 font-medium">
-            <li>
-              <a href="#" className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+            {/* <li> */}
+            {/* <a href="#" className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
                 <svg className="w-5 h-5 text-gray-500 transition duration-75  group-hover:text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
                   <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
                   <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
                 </svg>
                 <span className="ms-3">Dashboard</span>
-              </a>
-            </li>
+              </a> */}
+            {/* </li> */}
             <li>
               <Link to={"/"} className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
                 <svg
@@ -180,6 +180,19 @@ export default function Sidebar() {
                 {/* <span
         class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full">Pro</span> */}
               </a>
+            </li>
+            <li>
+              <Link to={"/add-staff"} className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z"
+                  />
+                </svg>
+
+                <span className="flex-1 ms-3 whitespace-nowrap">Add Staff</span>
+              </Link>
             </li>
           </ul>
           <div className="h-full content-end pb-4">

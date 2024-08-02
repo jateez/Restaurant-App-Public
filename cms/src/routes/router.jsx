@@ -5,6 +5,7 @@ import Login from "../pages/Login";
 import AddCuisine from "../pages/AddCuisine";
 import EditCuisine from "../pages/EditCuisine";
 import UploadImage from "../pages/UploadImage";
+import AddStaff from "../pages/AddStaff";
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
       {
         path: "cuisines/:cuisineId/patch",
         element: <UploadImage />,
+      },
+      {
+        path: "add-staff",
+        element: <AddStaff />,
       },
     ],
   },
