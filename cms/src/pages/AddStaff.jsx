@@ -1,4 +1,32 @@
+import { useState } from "react";
+import axios from "../config/axiosInstance";
+import { useNavigate } from "react-router-dom";
+
 export default function AddStaff() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigation = useNavigate();
+  async function handlerForm(e) {
+    try {
+      e.preventDefault();
+      // const { data } = await axios({
+      //   method: "post",
+      //   url: "/add-user",
+      //   headers: {
+      //     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      //   },
+      //   data: {
+      //     email,
+      //     password,
+      //   },
+      // });
+      console.log("hello");
+      console.log("HELo");
+      navigation("/");
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <>
       <div className="p-4 sm:ml-64">
@@ -15,6 +43,7 @@ export default function AddStaff() {
                   id="grid-first-name"
                   type="email"
                   placeholder=""
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
             </div>
@@ -28,12 +57,15 @@ export default function AddStaff() {
                   id="grid-password"
                   type="password"
                   placeholder=""
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
             </div>
             <div className="flex flex-wrap -mx-3 mb-6">
               <div className="w-full px-3 mb-3 flex justify-end">
-                <input className="shadow bg-indigo-800 hover:bg-indigo-600 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" type="submit" defaultValue="Add User" />
+                <button onClick={handlerForm} className="shadow bg-indigo-800 hover:bg-indigo-600 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded">
+                  {"Add User"}
+                </button>
               </div>
             </div>
           </form>

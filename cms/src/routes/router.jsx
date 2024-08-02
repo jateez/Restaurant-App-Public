@@ -6,6 +6,7 @@ import AddCuisine from "../pages/AddCuisine";
 import EditCuisine from "../pages/EditCuisine";
 import UploadImage from "../pages/UploadImage";
 import AddStaff from "../pages/AddStaff";
+import Categories from "../pages/Categories";
 
 const router = createBrowserRouter([
   {
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
       {
         path: "add-staff",
         element: <AddStaff />,
+      },
+      {
+        path: "categories",
+        element: <Categories />,
       },
     ],
   },

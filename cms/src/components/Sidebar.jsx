@@ -11,68 +11,10 @@ export default function Sidebar() {
         <div className="px-3 py-3 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-start rtl:justify-end">
-              <button
-                data-drawer-target="logo-sidebar"
-                data-drawer-toggle="logo-sidebar"
-                aria-controls="logo-sidebar"
-                type="button"
-                className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 "
-              >
-                <span className="sr-only">Open sidebar</span>
-                <svg className="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    clipRule="evenodd"
-                    fillRule="evenodd"
-                    d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
-                  ></path>
-                </svg>
-              </button>
-              <a href="" className="flex items-center space-x-3">
+              <Link to={"/"} className="flex items-center space-x-3">
                 <img className="max-w-10 self-center" src="./assets/images/food-svgrepo-com.svg" alt="" />
                 <span className="self-center text-2xl font-semibold whitespace-nowrap">Restaurant</span>
-              </a>
-            </div>
-            <div className="flex items-center">
-              <div className="flex items-center ms-3">
-                <div>
-                  <button type="button" onClick={handlerProfile} className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300" aria-expanded="false" data-dropdown-toggle="dropdown-user">
-                    <span className="sr-only">Open user menu</span>
-                    <img className="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo" />
-                  </button>
-                </div>
-                <div className="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow" id="dropdown-user">
-                  <div className="px-4 py-3" role="none">
-                    <p className="text-sm text-gray-900" role="none">
-                      Neil Sims
-                    </p>
-                    <p className="text-sm font-medium text-gray-900 truncate" role="none">
-                      neil.sims@flowbite.com
-                    </p>
-                  </div>
-                  <ul className="py-1" role="none">
-                    <li>
-                      <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                        Dashboard
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                        Settings
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                        Earnings
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                        Sign out
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
+              </Link>
             </div>
           </div>
         </div>
@@ -124,7 +66,7 @@ export default function Sidebar() {
                     </g>
                   </g>
                 </svg>
-                <span className="flex-1 ms-3 whitespace-nowrap">Food</span>
+                <span className="flex-1 ms-3 whitespace-nowrap">Cuisines</span>
               </Link>
             </li>
             <li>
@@ -166,8 +108,8 @@ export default function Sidebar() {
                 <span className="flex-1 ms-3 whitespace-nowrap">Edit Cuisine</span>
               </Link>
             </li> */}
-            <li>
-              <a href="#" className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+            {/* <li>
+              <Link to={""} className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
                 <svg fill="#000000" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" id="upload-alt-2" className="icon glyph flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75  group-hover:text-gray-900">
                   <g id="SVGRepo_bgCarrier" strokeWidth={0} />
                   <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round" />
@@ -177,9 +119,23 @@ export default function Sidebar() {
                   </g>
                 </svg>
                 <span className="flex-1 ms-3 whitespace-nowrap">Upload Image</span>
-                {/* <span
-        class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full">Pro</span> */}
-              </a>
+              </Link>
+            </li> */}
+            <li>
+              <Link to={"/categories"} className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z"
+                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h.008v.008H6V6Z" />
+                </svg>
+
+                <span className="flex-1 ms-3 whitespace-nowrap">Categories</span>
+                {/* <spanx
+        class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full">Pro</spanx> */}
+              </Link>
             </li>
             <li>
               <Link to={"/add-staff"} className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
@@ -192,6 +148,7 @@ export default function Sidebar() {
                 </svg>
 
                 <span className="flex-1 ms-3 whitespace-nowrap">Add Staff</span>
+                <spanx class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full">Admin Only</spanx>
               </Link>
             </li>
           </ul>

@@ -27,8 +27,17 @@ export default function Home() {
   useEffect(() => {
     fetchData();
   }, []);
+
   if (isLoading) {
-    return <p className="text-center font-bold">Loading...</p>;
+    return (
+      <>
+        <div className="p-4 sm:ml-64">
+          <div className="p-2 border-2 border-gray-200 min-h-screen flex justify-center items-center">
+            <p className="text-lg font-bold text-center">Loading... </p>
+          </div>
+        </div>
+      </>
+    );
   }
 
   return (
