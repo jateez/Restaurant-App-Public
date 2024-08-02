@@ -179,7 +179,7 @@ export default function Form() {
               <div className="flex flex-wrap -mx-3 mb-6">
                 <div className="w-full px-3 mb-3 flex justify-end">
                   <button onClick={handlerForm} className="shadow bg-indigo-800 hover:bg-indigo-600 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" type="submit">
-                    Add Cuisine
+                    Update Cuisine
                   </button>
                 </div>
               </div>
