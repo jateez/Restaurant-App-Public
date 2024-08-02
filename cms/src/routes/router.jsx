@@ -3,13 +3,14 @@ import MainLayout from "../pages/MainLayout";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import AddCuisine from "../pages/AddCuisine";
+import EditCuisine from "../pages/EditCuisine";
 
 const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
     loader: () => {
-      if (localStorage.access_token) {
+      if (localStorage.getItem("access_token")) {
         return redirect("/");
       }
       return null;
@@ -19,7 +20,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <MainLayout />,
     loader: () => {
-      if (!localStorage.access_token) {
+      if (!localStorage.getItem("access_token")) {
         return redirect("/login");
       }
       return null;
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
       {
         path: "cuisines/add",
         element: <AddCuisine />,
+      },
+      {
+        path: "cuisines/:cuisineId/edit",
+        element: <EditCuisine />,
       },
     ],
   },

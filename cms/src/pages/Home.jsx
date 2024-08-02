@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "../config/axiosInstance";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   const [cuisines, setCuisines] = useState([]);
@@ -46,6 +47,7 @@ export default function Home() {
                     <th className="px-6 py-3">Price</th>
                     <th className="px-6 py-3">Category</th>
                     <th className="px-6 py-3">Author</th>
+                    <th className="px-6 py-3">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -53,7 +55,7 @@ export default function Home() {
                   {cuisines.map((cuisine, index) => {
                     return (
                       <>
-                        <tr className="hover">
+                        <tr className="hover" key={cuisine.id}>
                           <td className="px-6 py-4">{index + 1}</td>
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-3">
@@ -69,7 +71,6 @@ export default function Home() {
                           <td className="px-6 py-4">{cuisine.price}</td>
                           <td className="px-6 py-4">
                             {(() => {
-                              console.log(cuisine.categoryId);
                               switch (cuisine.categoryId) {
                                 case 1:
                                   return "Main Course";
@@ -85,6 +86,14 @@ export default function Home() {
                             })()}
                           </td>
                           <td className="px-6 py-4">{cuisine.User.username}</td>
+                          <td className="px-6 py-4 flex gap-x-2">
+                            <Link to={`/cuisines/${cuisine.id}/edit`} className="btn btn-sm btn-warning">
+                              Edit
+                            </Link>
+                            <Link to={`/cuisines/${cuisine.id}/delete`} className="btn btn-sm btn-error">
+                              Delete
+                            </Link>
+                          </td>
                         </tr>
                       </>
                     );

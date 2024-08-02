@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigation = useNavigate();
   async function handlerLogin(e) {
-    const navigation = useNavigate();
     e.preventDefault();
     try {
       const { data } = await axios({
@@ -18,10 +18,7 @@ export default function Login() {
       });
 
       localStorage.setItem("access_token", data.access_token);
-
-      if (localStorage.getItem("access_token")) {
-        navigation("");
-      }
+      navigation("/");
     } catch (error) {
       console.log(error, "ERROR");
     }
