@@ -1,211 +1,376 @@
 import { useEffect, useState } from "react";
 import CuisineCard from "../components/CuisineCard";
 import axios from "../config/axiosInstance";
-import { useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function Home() {
-  const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [categories, setCategories] = useState([]);
   const [cuisines, setCuisines] = useState([]);
-  const [searchParams, setSearchParams] = useSearchParams();
   const [filter, setFilter] = useState("");
   const [sort, setSort] = useState("");
+  const [search, setSearch] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
 
-  async function handleFilter(e) {
-    e.preventDefault();
-    let params = serializeFormQuery(e.target);
-    setSearchParams(params);
+  async function fetchData(page = 1) {
+    try {
+      setIsLoading(true);
+      let queryParams = [];
+      if (filter) {
+        queryParams.push(`filter=${filter}`);
+      }
+      if (sort) {
+        queryParams.push(`sort=${sort}`);
+      }
+      if (page) {
+        queryParams.push(`page=${page}`);
+      }
+      if (search) {
+        queryParams.push(`search=${search}`);
+      }
+      let strQueryParams = queryParams.join("&");
+      const { data } = await axios({
+        method: "GET",
+        url: `/pub/cuisines?${strQueryParams}`,
+      });
+      setPageNumber(data.pageNumber);
+      setTotalPage(data.totalPage);
+      setCuisines(data.data);
+    } catch (error) {
+      toast.error(`${error.response.data.errors[0]}`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
-  async function handleSort(e) {
+  async function fetchCategories() {
+    try {
+      setIsLoading(true);
+      const categories = (
+        await axios({
+          method: "GET",
+          url: `/pub/categories`,
+        })
+      ).data.data;
+      setCategories(categories);
+    } catch (error) {
+      toast.error(`${error.response.data.errors[0]}`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  function handlerCategory(category) {
+    switch (category) {
+      case 1:
+        return "Main Course";
+      case 2:
+        return "Appetizers";
+      case 3:
+        return "Desserts";
+      case 4:
+        return "Beverages";
+      case 5:
+        return "Snacks";
+    }
+  }
+
+  function handlerSearch(e) {
     e.preventDefault();
-    let params = serializeFormQuery(e.target);
-    setSearchParams(params);
+    setSearch(e.target.value);
+  }
+
+  function handlerSearchSubmit(e) {
+    e.preventDefault();
+    fetchData(1);
+  }
+  function goToNextPage(e) {
+    e.preventDefault();
+    if (pageNumber < totalPage) {
+      setPageNumber((prev) => prev + 1);
+    }
+  }
+
+  function goToPreviousPage(e) {
+    e.preventDefault();
+    if (pageNumber > 1) {
+      setPageNumber((prev) => prev - 1);
+    }
+  }
+
+  function goToPage(e, page) {
+    e.preventDefault();
+    if (page >= 1 && page <= totalPage) {
+      setPageNumber(page);
+    }
+  }
+
+  function getPageNumbers() {
+    const pageNumbers = [];
+    const leftSiblingCount = 1;
+    const rightSiblingCount = 1;
+
+    pageNumbers.push(1);
+
+    const startPage = Math.max(2, pageNumber - leftSiblingCount);
+    const endPage = Math.min(totalPage - 1, pageNumber + rightSiblingCount);
+
+    if (startPage > 2) {
+      pageNumbers.push("...");
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(i);
+    }
+
+    if (endPage < totalPage - 1) {
+      pageNumbers.push("...");
+    }
+
+    if (totalPage !== 1) {
+      pageNumbers.push(totalPage);
+    }
+
+    return pageNumbers;
   }
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        setIsLoading(true);
-        const { data } = await axios({
-          method: "GET",
-          url: `/pub/cuisines?pagination=${pageNumber}`,
-        });
-        setPageNumber(data.pageNumber);
-        setTotalPage(data.totalPage);
-        setCuisines(data.data);
-      } catch (error) {
-        setError(error);
-        console.log(error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetchData();
-  }, [pageNumber]);
+    fetchCategories();
+  }, []);
 
+  useEffect(() => {
+    fetchData(1);
+    setPageNumber(1);
+  }, [filter, sort]);
+
+  useEffect(() => {
+    if (pageNumber > 1) {
+      fetchData(pageNumber);
+    }
+  }, [pageNumber]);
   if (isLoading) {
-    return <p className="text-center font-bold">Loading...</p>;
+    return (
+      <>
+        <div className="container">
+          <main className="my-12">
+            <div className="hero min-h-screen" style={{ backgroundImage: "url('https://picsum.photos/1600/900')" }}>
+              <div className="hero-overlay bg-opacity-60"></div>
+              <div className="hero-content text-center text-neutral-content">
+                <div className="max-w-md">
+                  <h1 className="mb-5 text-5xl font-bold">Welcome to Restaurant App</h1>
+                  <p className="mb-5">Discover delicious cuisines from around the world.</p>
+                  <button className="btn btn-primary">Get Started</button>
+                </div>
+              </div>
+            </div>
+            <div className="container mx-auto px-4 py-12">
+              <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                <div className="w-full">
+                  <form onSubmit={handlerSearchSubmit} className="join w-full">
+                    <input onChange={handlerSearch} type="text" value={search} placeholder="Search cuisines..." className="input input-bordered join-item flex-grow" />
+                    <button type="submit" className="btn btn-primary join-item">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </button>
+                  </form>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <select className="select select-primary w-full sm:w-auto" onChange={(e) => setFilter(e.target.value)} defaultValue={filter}>
+                    <option disabled value="">
+                      Filter by Category
+                    </option>
+                    {categories.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                  <select className="select select-primary w-full sm:w-auto" defaultValue={sort} onChange={(e) => setSort(e.target.value)}>
+                    <option disabled value="">
+                      Sort by
+                    </option>
+                    <option value="ASC">Price: Low to High</option>
+                    <option value="DESC">Price: High to Low</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="flex justify-center items-center h-screen">
+                  <span className="loading loading-spinner loading-lg"></span>
+                </div>
+              </div>
+
+              <div className="flex justify-center mt-8">
+                <div className="join">
+                  <button className="join-item btn" onClick={goToPreviousPage} disabled={pageNumber === 1}>
+                    «
+                  </button>
+                  {getPageNumbers().map((page, index) =>
+                    page === "..." ? (
+                      <span key={index} className="join-item btn btn-disabled">
+                        ...
+                      </span>
+                    ) : (
+                      <button key={index} className={`join-item btn ${pageNumber === page ? "btn-active" : ""}`} onClick={(e) => goToPage(e, page)}>
+                        {page}
+                      </button>
+                    )
+                  )}
+                  <button className="join-item btn" onClick={goToNextPage} disabled={pageNumber === totalPage}>
+                    »
+                  </button>
+                </div>
+              </div>
+            </div>
+          </main>
+          <footer className="footer footer-center p-10 bg-base-200 text-base-content rounded">
+            <div>
+              <div className="grid grid-flow-col gap-4">
+                <Link>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" className="fill-current">
+                    <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path>
+                  </svg>
+                </Link>
+                <Link>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" className="fill-current">
+                    <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path>
+                  </svg>
+                </Link>
+                <Link>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" className="fill-current">
+                    <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path>
+                  </svg>
+                </Link>
+              </div>
+            </div>
+            <div>
+              <p>Copyright © 2024 - All right reserved by Restaurant App</p>
+            </div>
+          </footer>
+        </div>
+      </>
+    );
   }
   return (
     <>
       <div className="container">
         <main className="my-12">
-          <div id="hero-1" className="hidden carousel w-full min-h-[100dvh] flex items-center justify-center bg-[url('https://picsum.photos/1600/900')]">
-            <h1 className="font-bold text-white text-3xl">Welcome to Restaurant App</h1>
+          <div className="hero min-h-screen" style={{ backgroundImage: "url('https://picsum.photos/1600/900')" }}>
+            <div className="hero-overlay bg-opacity-60"></div>
+            <div className="hero-content text-center text-neutral-content">
+              <div className="max-w-md">
+                <h1 className="mb-5 text-5xl font-bold">Welcome to Restaurant App</h1>
+                <p className="mb-5">Discover delicious cuisines from around the world.</p>
+                <button className="btn btn-primary">Get Started</button>
+              </div>
+            </div>
           </div>
-          <div id="hero-2" className="w-screen min-h-screen pt-24 px-12">
-            <div id="options" className="flex justify-evenly items-center">
-              <div id="search" className="flex flex-1 justify-center items-center space-x-3 pr-8">
-                <label className="flex justify-between input input-bordered input-sm border-s border-orange-500 items-center gap-2 w-full pr-0">
-                  <input type="text" className="grow" placeholder="Search" />
-                  <button type="submit flex justify-end">
-                    <svg className="bg-orange-500 text-white focus:ring-4 focus:ring-orange-300 rounded-lg h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                      <path fillRule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clipRule="evenodd" />
+          <div className="container mx-auto px-4 py-12">
+            <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+              <div className="w-full">
+                <form onSubmit={handlerSearchSubmit} className="join w-full">
+                  <input onChange={handlerSearch} type="text" value={search} placeholder="Search cuisines..." className="input input-bordered join-item flex-grow" />
+                  <button type="submit" className="btn btn-primary join-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                   </button>
-                </label>
+                </form>
               </div>
-              <div id="buttons" className="flex items-center gap-x-4">
-                <div id="filter-option" className="flex items-center">
-                  <form onChange={handleSubmit}>
-                    <select id="filter" name="filter" className="select select-bordered select-sm focus:outline-none text-white bg-orange-500 hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm">
-                      <option disabled selected>
-                        Filter
-                      </option>
-                      <option value="Main Course">Main Course</option>
-                      <option value="Appetizers">Appetizers</option>
-                      <option value="Desserts">Desserts</option>
-                      <option value="Beverages">Beverages</option>
-                      <option value="Snacks">Snacks</option>
-                    </select>
-                  </form>
-                </div>
-                <div id="sort-option">
-                  <form onChange={handleSubmit}>
-                    <select id="sort" name="sort" className="select select-bordered select-sm focus:outline-none text-white bg-orange-500 hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm">
-                      <option disabled selected>
-                        Sort
-                      </option>
-                      <option value={"ASC"}>ASC</option>
-                      <option value={"ASC"}>DESC</option>
-                    </select>
-                  </form>
-                </div>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <select className="select select-primary w-full sm:w-auto" onChange={(e) => setFilter(e.target.value)} defaultValue={filter}>
+                  <option disabled value="">
+                    Filter by Category
+                  </option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+                <select className="select select-primary w-full sm:w-auto" defaultValue={sort} onChange={(e) => setSort(e.target.value)}>
+                  <option disabled value="">
+                    Sort by
+                  </option>
+                  <option value="ASC">Price: Low to High</option>
+                  <option value="DESC">Price: High to Low</option>
+                </select>
               </div>
             </div>
-            <div id="cards" className="justify-between flex flex-wrap py-12 gap-12">
-              {/* Card */}
-              {cuisines.map((cuisine, index) => {
-                return <CuisineCard key={index + 1} name={cuisine.name} description={cuisine.description} id={cuisine.id} />;
-              })}
-              {/* End Card */}
-            </div>
-            <div id="pagination" className="flex justify-center">
-              <div className="flex items-center gap-4">
-                <button
-                  className="flex items-center gap-2 px-6 py-3 font-sans text-xs font-bold text-center text-gray-900 uppercase align-middle transition-all rounded-full select-none hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                  type="button"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true" className="w-8 h-8">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-                  </svg>
-                  Previous
-                </button>
-                <div className="flex items-center gap-2">
-                  <button
-                    className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-full text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                    type="button"
-                  >
-                    <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">{pageNumber - 1}</span>
-                  </button>
-                  <button
-                    className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-full bg-gray-900 text-center align-middle font-sans text-xs font-medium uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                    type="button"
-                  >
-                    <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">{pageNumber}</span>
-                  </button>
-                  <button
-                    className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-full text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                    type="button"
-                  >
-                    <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">{pageNumber + 1}</span>
-                  </button>
 
-                  <button
-                    className="disabled relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-full text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                    type="button"
-                  >
-                    <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">...</span>
-                  </button>
-                  <button
-                    className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-full text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                    type="button"
-                  >
-                    <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">{totalPage}</span>
-                  </button>
-                </div>
-                <button
-                  className="flex items-center gap-2 px-6 py-3 font-sans text-xs font-bold text-center text-gray-900 uppercase align-middle transition-all rounded-full select-none hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                  type="button"
-                >
-                  Next
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true" className="w-8 h-8">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                  </svg>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {cuisines.map((cuisine) => (
+                <CuisineCard key={cuisine.id} name={cuisine.name} description={cuisine.description} id={cuisine.id} category={handlerCategory(cuisine.categoryId)} imgUrl={cuisine.imgUrl} />
+              ))}
+            </div>
+
+            <div className="flex justify-center mt-8">
+              <div className="join">
+                <button className="join-item btn" onClick={goToPreviousPage} disabled={pageNumber === 1}>
+                  «
+                </button>
+                {getPageNumbers().map((page, index) =>
+                  page === "..." ? (
+                    <span key={index} className="join-item btn btn-disabled">
+                      ...
+                    </span>
+                  ) : (
+                    <button key={index} className={`join-item btn ${pageNumber === page ? "btn-active" : ""}`} onClick={(e) => goToPage(e, page)}>
+                      {page}
+                    </button>
+                  )
+                )}
+                <button className="join-item btn" onClick={goToNextPage} disabled={pageNumber === totalPage}>
+                  »
                 </button>
               </div>
             </div>
           </div>
         </main>
-        <footer className="flex min-h-[15dvh] border-t w-screen shadow-inner items-center px-12">
-          <div className="flex h-full justify-between items-center w-full px-4">
-            <span className="text-lg">
-              <a href="" className="hover:underline">
-                Restaurant™
-              </a>
-              . All Rights Reserved.
-            </span>
-            <ul className="flex flex-wrap items-center text-lg font-medium gap-12">
-              <li>
-                <a href="" className="">
-                  <svg className="w-8 h-8 hover:text-red-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 8 19">
-                    <path fillRule="evenodd" d="M6.135 3H8V0H6.135a4.147 4.147 0 0 0-4.142 4.142V6H0v3h2v9.938h3V9h2.021l.592-3H5V3.591A.6.6 0 0 1 5.592 3h.543Z" clipRule="evenodd" />
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <a href="" className="">
-                  <svg className="w-8 h-8 hover:text-red-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 21 16">
-                    <path d="M16.942 1.556a16.3 16.3 0 0 0-4.126-1.3 12.04 12.04 0 0 0-.529 1.1 15.175 15.175 0 0 0-4.573 0 11.585 11.585 0 0 0-.535-1.1 16.274 16.274 0 0 0-4.129 1.3A17.392 17.392 0 0 0 .182 13.218a15.785 15.785 0 0 0 4.963 2.521c.41-.564.773-1.16 1.084-1.785a10.63 10.63 0 0 1-1.706-.83c.143-.106.283-.217.418-.33a11.664 11.664 0 0 0 10.118 0c.137.113.277.224.418.33-.544.328-1.116.606-1.71.832a12.52 12.52 0 0 0 1.084 1.785 16.46 16.46 0 0 0 5.064-2.595 17.286 17.286 0 0 0-2.973-11.59ZM6.678 10.813a1.941 1.941 0 0 1-1.8-2.045 1.93 1.93 0 0 1 1.8-2.047 1.919 1.919 0 0 1 1.8 2.047 1.93 1.93 0 0 1-1.8 2.045Zm6.644 0a1.94 1.94 0 0 1-1.8-2.045 1.93 1.93 0 0 1 1.8-2.047 1.918 1.918 0 0 1 1.8 2.047 1.93 1.93 0 0 1-1.8 2.045Z" />
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <a href="" className="">
-                  <svg className="w-8 h-8 hover:text-red-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 17">
-                    <path
-                      fillRule="evenodd"
-                      d="M20 1.892a8.178 8.178 0 0 1-2.355.635 4.074 4.074 0 0 0 1.8-2.235 8.344 8.344 0 0 1-2.605.98A4.13 4.13 0 0 0 13.85 0a4.068 4.068 0 0 0-4.1 4.038 4 4 0 0 0 .105.919A11.705 11.705 0 0 1 1.4.734a4.006 4.006 0 0 0 1.268 5.392 4.165 4.165 0 0 1-1.859-.5v.05A4.057 4.057 0 0 0 4.1 9.635a4.19 4.19 0 0 1-1.856.07 4.108 4.108 0 0 0 3.831 2.807A8.36 8.36 0 0 1 0 14.184 11.732 11.732 0 0 0 6.291 16 11.502 11.502 0 0 0 17.964 4.5c0-.177 0-.35-.012-.523A8.143 8.143 0 0 0 20 1.892Z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <a href="" className="">
-                  <svg className="w-8 h-8 hover:text-red-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      fillRule="evenodd"
-                      d="M10 .333A9.911 9.911 0 0 0 6.866 19.65c.5.092.678-.215.678-.477 0-.237-.01-1.017-.014-1.845-2.757.6-3.338-1.169-3.338-1.169a2.627 2.627 0 0 0-1.1-1.451c-.9-.615.07-.6.07-.6a2.084 2.084 0 0 1 1.518 1.021 2.11 2.11 0 0 0 2.884.823c.044-.503.268-.973.63-1.325-2.2-.25-4.516-1.1-4.516-4.9A3.832 3.832 0 0 1 4.7 7.068a3.56 3.56 0 0 1 .095-2.623s.832-.266 2.726 1.016a9.409 9.409 0 0 1 4.962 0c1.89-1.282 2.717-1.016 2.717-1.016.366.83.402 1.768.1 2.623a3.827 3.827 0 0 1 1.02 2.659c0 3.807-2.319 4.644-4.525 4.889a2.366 2.366 0 0 1 .673 1.834c0 1.326-.012 2.394-.012 2.72 0 .263.18.572.681.475A9.911 9.911 0 0 0 10 .333Z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </a>
-              </li>
-            </ul>
+        <footer className="footer footer-center p-10 bg-base-200 text-base-content rounded">
+          <div>
+            <div className="grid grid-flow-col gap-4">
+              <Link>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" className="fill-current">
+                  <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path>
+                </svg>
+              </Link>
+              <Link>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" className="fill-current">
+                  <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path>
+                </svg>
+              </Link>
+              <Link>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" className="fill-current">
+                  <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path>
+                </svg>
+              </Link>
+            </div>
+          </div>
+          <div>
+            <p>Copyright © 2024 - All right reserved by Restaurant App</p>
           </div>
         </footer>
       </div>

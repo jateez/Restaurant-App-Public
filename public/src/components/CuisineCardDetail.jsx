@@ -1,66 +1,87 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "../config/axiosInstance";
+import { toast } from "react-toastify";
 
-export default function CuisineCardDetail() {
-  const navigation = useNavigate();
-  const [error, setError] = useState(null);
+export default function CuisineCardDetail({}) {
   const [isLoading, setIsLoading] = useState(false);
   const [cuisine, setCuisine] = useState({});
   const { id } = useParams();
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        setIsLoading(true);
-        const { data } = await axios({
+  async function fetchData() {
+    try {
+      setIsLoading(true);
+      const cuisine = (
+        await axios({
           method: "GET",
           url: `/pub/cuisines/${id}`,
-        });
-        console.log(data);
-        setCuisine(data.data);
-      } catch (error) {
-        console.log(error);
-        setError(error);
-      } finally {
-        setIsLoading(false);
-      }
+        })
+      ).data.data;
+
+      setCuisine(cuisine);
+    } catch (error) {
+      toast.error(`${error.response.data.errors[0]}`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } finally {
+      setIsLoading(false);
     }
+  }
+
+  useEffect(() => {
     fetchData();
   }, []);
 
+  function handlerCategory(category) {
+    switch (category) {
+      case 1:
+        return "Main Course";
+      case 2:
+        return "Appetizers";
+      case 3:
+        return "Desserts";
+      case 4:
+        return "Beverages";
+      case 5:
+        return "Snacks";
+    }
+  }
+
   if (isLoading) {
-    return <p className="text-center font-bold">Loading...</p>;
+    <div className="flex justify-center items-center h-screen">
+      <span className="loading loading-spinner loading-lg"></span>
+    </div>;
   }
   return (
     <>
       <div className="container">
         <main className="pt-12">
-          <div className="h-screen w-screen flex flex-col justify-center items-center bg-gray-100 py-12">
-            <div id="cuisine" className="flex shadow-2xl w-3/4 h-4/5 border divide-x rounded-lg overflow-hidden bg-white">
-              <div id="image" className="h-full w-1/2">
-                <img className="object-cover h-full w-full" src={cuisine.imageUrl} alt="" />
-              </div>
-              <div id="details" className="flex flex-col justify-between h-full w-1/2 text-center p-8">
-                <div>
-                  <h2 className="text-3xl font-bold mb-6">{cuisine.name}</h2>
-                  <p className="text-xl px-4 py-2 bg-blue-100 rounded-full inline-block mb-12">Category: {cuisine.category}</p>
-                  <p className="text-2xl font-semibold mb-6">{cuisine.description}</p>
+          <div className="min-h-screen bg-base-200 pt-32 px-4 sm:px-6 lg:px-8 flex-wrap items-center">
+            <div className="max-w-4xl mx-auto bg-base-100 rounded-box shadow-xl overflow-hidden">
+              <div className="md:flex">
+                <div className="md:flex-shrink-0">
+                  <img className="h-48 w-full object-cover md:h-full md:w-48" src={cuisine.imgUrl} alt={cuisine.name} />
                 </div>
-                <p className="text-2xl font-medium">Rp. {cuisine.price}</p>
+                <div className="p-8">
+                  <div className="uppercase tracking-wide text-sm text-primary font-semibold">{handlerCategory(cuisine.categoryId)}</div>
+                  <h1 className="mt-1 text-4xl font-extrabold text-neutral">{cuisine.name}</h1>
+                  <p className="mt-10 text-black-content ">{cuisine.description}</p>
+                  <div className="mt-4">
+                    <span className="text-2xl font-bold text-primary">Rp. {cuisine.price}</span>
+                  </div>
+                </div>
               </div>
             </div>
-            <br />
-            <div id="back" className="mt-8">
-              <button
-                onClick={(e) => {
-                  e.preventDefault;
-                  navigation("/");
-                }}
-                className="bg-red-500 text-white px-6 py-3 rounded-full hover:bg-red-600 transition duration-300"
-              >
-                Back
-              </button>
+            <div className="mt-8 text-center">
+              <Link to={"/"} className="btn btn-primary">
+                Back to Home
+              </Link>
             </div>
           </div>
         </main>
