@@ -60,7 +60,7 @@ export default function Form() {
     async function handlerForm(e) {
       try {
         e.preventDefault();
-        const response = await axios({
+        await axios({
           method: "PUT",
           url: `/cuisines/${cuisineId}`,
           data: {
@@ -161,7 +161,7 @@ export default function Form() {
                       className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                       id="category"
                       name="category"
-                      defaultValue={""}
+                      defaultValue={category}
                       onChange={(e) => setCategory(e.target.value)}
                     >
                       <option disabled value={"Choose Category"}>
