@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import instance from "../config/axiosInstance";
+import { toast } from "react-toastify";
 
 export default function Categories() {
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState();
   async function fetchData() {
     try {
       setIsLoading(true);
@@ -17,7 +17,16 @@ export default function Categories() {
       });
       setCategories(data.data);
     } catch (error) {
-      console.log(error);
+      toast.error(`${error.response.data.errors[0]}`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -41,7 +50,7 @@ export default function Categories() {
   return (
     <>
       <div className="p-4 sm:ml-64">
-        <div className="p-2 border-2 border-gray-200 min-h-screen flex items-start mt-16">
+        <div className="p-2 border-2 border-gray-200 qgi flex items-start mt-16">
           <table className="table flex w-full min-h-24 rounded bg-gray-50">
             <thead className="bg-gray-100 hover:bg-gray-300 uppercase">
               <tr className="hover">

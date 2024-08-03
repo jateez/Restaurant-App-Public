@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "../config/axiosInstance";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,7 +21,16 @@ export default function Login() {
       localStorage.setItem("access_token", data.access_token);
       navigation("/");
     } catch (error) {
-      console.log(error, "ERROR");
+      toast.error(`${error.response.data.errors[0]}`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
   }
   return (
@@ -57,9 +67,6 @@ export default function Login() {
                         <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
                           Password
                         </label>
-                        {/* <div class="text-sm">
-                <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Forgot password?</a>
-              </div> */}
                       </div>
                       <div className="mt-2">
                         <input
@@ -85,15 +92,9 @@ export default function Login() {
                   </form>
                   <div className="flex flex-col mt-10 text-center test-sm text-gray-500 divide-y divide-gray-400 space-y-2">
                     <p className="text-center text-sm text-gray-500">
-                      Does not have staff account?
-                      <a href="#" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
-                        {" Register here"}
-                      </a>
-                    </p>
-                    <p className="text-center text-sm text-gray-500">
                       Not the website you are looking for?
                       <a href="#" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
-                        {" Click here"}
+                        {"Click here"}
                       </a>
                     </p>
                   </div>

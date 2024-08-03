@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "../config/axiosInstance";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import Button from "./Button";
 
 export default function Form() {
   const [name, setName] = useState("");
@@ -38,7 +40,16 @@ export default function Form() {
           ).data.data
         );
       } catch (error) {
-        console.log(error);
+        toast.error(`${error.response.data.errors[0]}`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       }
     }
 
@@ -49,7 +60,7 @@ export default function Form() {
     async function handlerForm(e) {
       try {
         e.preventDefault();
-        await axios({
+        const response = await axios({
           method: "PUT",
           url: `/cuisines/${cuisineId}`,
           data: {
@@ -63,9 +74,28 @@ export default function Form() {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },
         });
+        toast.info(`Succesfully updated cuisine data`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
         navigation("/");
       } catch (error) {
-        console.log(error);
+        toast.error(`${error.response.data.errors[0]}`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       }
     }
     return (
@@ -178,9 +208,7 @@ export default function Form() {
               </div>
               <div className="flex flex-wrap -mx-3 mb-6">
                 <div className="w-full px-3 mb-3 flex justify-end">
-                  <button onClick={handlerForm} className="shadow bg-indigo-800 hover:bg-indigo-600 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" type="submit">
-                    Update Cuisine
-                  </button>
+                  <Button buttonHandler={handlerForm} buttonText={"Update Cuisine"} />
                 </div>
               </div>
             </form>
@@ -192,7 +220,7 @@ export default function Form() {
     async function handlerForm(e) {
       try {
         e.preventDefault();
-        await axios({
+        const response = await axios({
           method: "POST",
           url: "/cuisines",
           data: {
@@ -206,9 +234,28 @@ export default function Form() {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },
         });
+        toast.info(`${response.data.message}`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
         navigation("/");
       } catch (error) {
-        console.log(error);
+        toast.error(`${error.response.data.errors[0]}`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       }
     }
     return (
@@ -303,9 +350,7 @@ export default function Form() {
               </div>
               <div className="flex flex-wrap -mx-3 mb-6">
                 <div className="w-full px-3 mb-3 flex justify-end">
-                  <button onClick={handlerForm} className="shadow bg-indigo-800 hover:bg-indigo-600 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" type="submit">
-                    Add Cuisine
-                  </button>
+                  <Button buttonHandler={handlerForm} buttonText={"Add Cuisine"} />
                 </div>
               </div>
             </form>

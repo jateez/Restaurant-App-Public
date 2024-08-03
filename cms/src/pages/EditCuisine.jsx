@@ -1,6 +1,6 @@
 import Form from "../components/Form";
 
-export default function EditCuisine(params) {
+export default function EditCuisine() {
   return (
     <>
       <Form />

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "../config/axiosInstance";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import Button from "../components/Button";
 
 export default function UploadImage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -19,7 +21,16 @@ export default function UploadImage() {
       });
       setImgUrl(data.data.imgUrl);
     } catch (error) {
-      console.log(error);
+      toast.error(`${error.response.data.errors[0]}`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -36,7 +47,7 @@ export default function UploadImage() {
       const bodyForm = new FormData();
       bodyForm.append("image", file);
 
-      await axios({
+      const response = await axios({
         method: "PATCH",
         url: `/cuisines/${cuisineId}`,
         data: bodyForm,
@@ -45,9 +56,29 @@ export default function UploadImage() {
           "Content-Type": "multipart/form-data",
         },
       });
+      toast.info(`${response.data.message}`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       navigation("/");
     } catch (error) {
-      console.log(error);
+      toast.error(`${error.response.data.errors[0]}`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      navigation(`/cuisines/${cuisineId}/patch}`);
     } finally {
       setIsLoading(true);
     }
@@ -76,9 +107,7 @@ export default function UploadImage() {
               <p className="text-lg text-center font-semibold">Update image:</p>
               <input onChange={(e) => setFile(e.target.files[0])} type="file" className="file-input file-input-bordered w-full my-4" />
               <div className="flex w-full justify-end">
-                <button onClick={handlerForm} type="submit" className="btn btn-info text-white">
-                  Upload Image
-                </button>
+                <Button buttonHandler={handlerForm} buttonText={"Upload Image"} />
               </div>
             </div>
           </div>

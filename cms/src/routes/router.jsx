@@ -20,6 +20,13 @@ const router = createBrowserRouter([
     },
   },
   {
+    path: "/logout",
+    loader: () => {
+      localStorage.removeItem("access_token");
+      return redirect("/login");
+    },
+  },
+  {
     path: "/",
     element: <MainLayout />,
     loader: () => {
