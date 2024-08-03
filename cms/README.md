@@ -2,4 +2,14 @@
 
 # P2-Challenge-2 (Client Side)
 
-> Tuliskan API Docs kamu di sini
+Arya
+Link deploy client:
+
+CMS:
+https://cms-arya-h8.web.app/
+
+Public:
+https://restaurant-arya-h8.web.app/
+
+Link deploy server:
+https://restaurant-app-api.aryajati.my.id/
