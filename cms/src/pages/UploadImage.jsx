@@ -7,6 +7,7 @@ import Button from "../components/Button";
 export default function UploadImage() {
   const [isLoading, setIsLoading] = useState(true);
   const [imgUrl, setImgUrl] = useState("");
+  const [name, setName] = useState("");
   const [file, setFile] = useState();
   const navigation = useNavigate();
   const { cuisineId } = useParams();
@@ -19,6 +20,7 @@ export default function UploadImage() {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
+      setName(data.data.name);
       setImgUrl(data.data.imgUrl);
     } catch (error) {
       toast.error(`${error.response.data.errors[0]}`, {
@@ -100,7 +102,7 @@ export default function UploadImage() {
         <div className="p-2 border-2 border-gray-200 rounded-lg mt-14">
           <div className="w-full flex flex-col gap-4 mb-4">
             <div className="border shadow-md min-h-24 p-4">
-              <p className="text-lg text-center font-semibold">Current image:</p>
+              <p className="text-lg text-center font-semibold">{`${name}:`}</p>
               <img src={imgUrl} alt="" className="object-cover max-w-72 max-h-72 self-center" />
             </div>
             <div className="border p-4">
